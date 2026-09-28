@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Clonepedia — Star Wars Clone Trooper Encyclopedia</title>
+<style>
+:root{
+  --bg:#0b0e12;--panel:#12171d;--panel2:#171d24;--line:#2a333d;
+  --text:#e9eef3;--muted:#9aa6b2;--accent:#e0b84b;--accent2:#72b7ff;
+  --canon:#4caf72;--legends:#9b70d6;--danger:#e36d6d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}
+.top{position:sticky;top:0;z-index:20;background:#0d1116ee;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topin{min-height:72px;display:flex;align-items:center;gap:18px;padding:12px 22px}
+.logo{font-weight:900;font-size:25px;white-space:nowrap;letter-spacing:.3px}.logo span{color:var(--accent)}
+.search{flex:1;position:relative}.search input{width:100%;background:#151b22;border:1px solid #35404b;border-radius:10px;color:white;padding:13px 15px 13px 42px;outline:none}.search input:focus{border-color:var(--accent)}
+.search:before{content:"⌕";position:absolute;left:15px;top:8px;font-size:24px;color:var(--muted)}
+.nav{display:flex;gap:8px}.nav button,.pill{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer}.nav button:hover,.pill:hover{border-color:#596673}
+.layout{display:grid;grid-template-columns:235px minmax(0,1fr) 360px;gap:18px;max-width:1700px;margin:auto;padding:18px}
+.side,.detail,.hero,.toolbar,.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 35px #0002}
+.side{padding:15px;height:calc(100vh - 108px);position:sticky;top:90px;overflow:auto}.side h3{font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:1px;margin:7px 8px 10px}
+.side button{width:100%;text-align:left;background:transparent;border:0;color:#cbd4dc;padding:10px;border-radius:8px;cursor:pointer}.side button:hover,.side button.active{background:#202832;color:white}.count{float:right;color:var(--muted)}
+main{min-width:0}.hero{padding:25px;background:linear-gradient(135deg,#171d24,#11151a 65%,#1b1710)}.eyebrow{color:var(--accent);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:1.4px}.hero h1{font-size:36px;margin:8px 0}.hero p{color:#b9c3cc;line-height:1.6;max-width:850px;margin:0}
+.toolbar{margin-top:14px;padding:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.toolbar select{background:#151b22;color:white;border:1px solid var(--line);border-radius:8px;padding:9px}.toolbar .spacer{flex:1}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:12px;margin-top:14px}
+.card{padding:13px;cursor:pointer;transition:.15s;min-height:170px}.card:hover{transform:translateY(-2px);border-color:#596673}
+.avatar{height:90px;border-radius:9px;background:linear-gradient(135deg,#d7dce0,#777f88);display:grid;place-items:center;color:#111;font-weight:900;font-size:26px;margin-bottom:12px;position:relative;overflow:hidden}
+.avatar:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,#ffffff00 0 12px,#ffffff22 13px 14px)}
+.card h3{margin:0 0 5px;font-size:17px}.meta{font-size:12px;color:var(--muted);margin-bottom:9px}.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800}.canon{background:#173824;color:#82d59f}.legends{background:#2b1d40;color:#c9a7f2}
+.detail{height:calc(100vh - 108px);position:sticky;top:90px;overflow:auto;padding:18px}.detail.empty{display:grid;place-items:center;text-align:center;color:var(--muted)}
+.detail h2{font-size:29px;margin:12px 0 4px}.detail .bigavatar{height:180px;border-radius:12px;background:linear-gradient(135deg,#dce1e5,#606873);display:grid;place-items:center;color:#111;font-size:52px;font-weight:900}.facts{margin-top:16px;border-top:1px solid var(--line)}.fact{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #222a32;font-size:14px}.fact b{color:#9eabb7}.bio{color:#bcc6cf;line-height:1.6;font-size:14px}.related{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.notice{padding:10px 12px;background:#171d24;border:1px solid var(--line);border-radius:9px;color:#aeb8c2;font-size:12px;line-height:1.5;margin-top:14px}
+footer{max-width:1700px;margin:auto;padding:8px 22px 25px;color:#66717c;font-size:11px}
+.hidden{display:none!important}
+@media(max-width:1050px){.layout{grid-template-columns:200px minmax(0,1fr)}.detail{grid-column:1/-1;height:auto;position:relative;top:auto}.side{height:calc(100vh - 108px)}}
+@media(max-width:700px){.topin{flex-wrap:wrap}.search{order:3;flex-basis:100%}.layout{display:block;padding:10px}.side{position:relative;top:auto;height:auto;margin-bottom:10px}.side .sideitems{display:grid;grid-template-columns:repeat(2,1fr)}.hero h1{font-size:29px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.detail{margin-top:10px}.nav{display:none}}
+@media(max-width:430px){.cards{grid-template-columns:1fr}.hero{padding:18px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <div class="logo">✦ <span>Clone</span>pedia</div>
+    <div class="search"><input id="search" placeholder="Search clones, designations, units, or anything..." autocomplete="off"></div>
+    <nav class="nav"><button onclick="setFilter('All')">Home</button><button onclick="focusGrid()">Clones</button></nav>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="side">
+  <h3>Continuity</h3>
+  <div class="sideitems">
+    <button class="active" data-cont="All">All <span class="count" id="countAll"></span></button>
+    <button data-cont="Canon">Canon <span class="count" id="countCanon"></span></button>
+    <button data-cont="Legends">Legends <span class="count" id="countLegends"></span></button>
+  </div>
+  <h3>Units</h3>
+  <select id="unitSelect" style="width:100%;background:#151b22;color:white;border:1px solid var(--line);border-radius:8px;padding:10px">
+    <option value="All">All units</option>
+  </select>
+  <div style="margin-top:10px;color:var(--muted);font-size:12px;line-height:1.5">
+    The selector is generated from every unit currently represented in the encyclopedia database.
+  </div>
+  <div class="notice">Clonepedia is a fan-made encyclopedia. Canon and Legends are kept separate so you can explore both continuities.</div>
+</aside>
+
+<main>
+<section class="hero">
+  <div class="eyebrow">Star Wars Clone Trooper Encyclopedia</div>
+  <h1>Every named clone, in one place.</h1>
+  <p>Search a clone by name or designation, browse by unit, or switch between current Canon and Legends continuity.</p>
+</section>
+
+<div class="toolbar">
+  <button class="pill active" onclick="setFilter('All')">All</button>
+  <button class="pill" onclick="setFilter('Canon')">Canon</button>
+  <button class="pill" onclick="setFilter('Legends')">Legends</button>
+  <select id="sort">
+    <option value="name">Sort: Name</option>
+    <option value="designation">Sort: Designation</option>
+    <option value="unit">Sort: Unit</option>
+  </select>
+  <div class="spacer"></div><span id="resultText" style="color:var(--muted);font-size:13px"></span>
+</div>
+
+<div id="grid" class="cards"></div>
+</main>
+
+<section id="detail" class="detail empty">
+  <div><div style="font-size:45px">✦</div><h2>Select a clone</h2><p>Click any card to open the encyclopedia entry.</p></div>
+</section>
+</div>
+
+<footer>Clonepedia is a fan-made project and is not affiliated with or endorsed by Lucasfilm Ltd., Disney, or their respective owners. Star Wars and related names are trademarks of their respective owners.</footer>
+
+<script>
+const clones = [
+{name:"Rex",designation:"CT-7567",rank:"Captain / Commander",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A veteran clone officer who became one of the best-known members of the 501st Legion. He served alongside Anakin Skywalker and Ahsoka Tano and later worked to help his fellow clones.",aliases:"Captain Rex"},
+{name:"Cody",designation:"CC-2224",rank:"Marshal Commander",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Canon",bio:"Obi-Wan Kenobi's clone commander and a major leader of the 212th Attack Battalion.",aliases:"Commander Cody"},
+{name:"Fives",designation:"CT-27-5555",rank:"ARC Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A Domino Squad survivor who became an ARC trooper. His investigation into the clone behavioral chips uncovered a major secret behind the war.",aliases:"ARC Trooper Fives"},
+{name:"Echo",designation:"CT-1409",rank:"ARC Trooper",unit:"501st Legion / Clone Force 99",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"A former Domino Squad trooper who later served with the 501st and joined Clone Force 99.",aliases:"ARC Trooper Echo"},
+{name:"Jesse",designation:"CT-5597",rank:"ARC Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A 501st clone and ARC trooper who served with Captain Rex and the other Torrent Company clones.",aliases:"ARC Trooper Jesse"},
+{name:"Kix",designation:"CT-6116",rank:"Medic",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A medic of the 501st Legion who investigated the strange behavior surrounding Tup.",aliases:"Kix"},
+{name:"Hardcase",designation:"CT-6922",rank:"Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"An energetic 501st clone who fought in the campaign on Umbara.",aliases:"Hardcase"},
+{name:"Tup",designation:"CT-5385",rank:"Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A member of the 501st whose actions became central to the discovery of the clone behavioral-chip conspiracy.",aliases:"Tup"},
+{name:"Dogma",designation:"CT-782",rank:"Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A strict 501st clone who placed great importance on following military orders.",aliases:"Dogma"},
+{name:"Appo",designation:"CC-1119",rank:"Commander",unit:"501st Legion",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"A clone officer who served in the 501st and later took part in the transition from Republic to Empire.",aliases:"Commander Appo"},
+{name:"Hawk",designation:"Unknown",rank:"Captain",unit:"104th / Plo Koon's forces",era:"Clone Wars",continuity:"Canon",bio:"A clone pilot and officer associated with Plo Koon's forces.",aliases:"Captain Hawk"},
+{name:"Wolffe",designation:"CC-3636",rank:"Commander",unit:"104th Battalion / Wolfpack",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"Commander of the Wolfpack under Jedi Master Plo Koon and later a survivor of the Clone Wars.",aliases:"Commander Wolffe"},
+{name:"Gregor",designation:"CC-5576-39",rank:"Commander",unit:"Foxtrot Group",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"A clone commando who survived the events on Abafar and later became one of the clone veterans encountered by the Ghost crew.",aliases:"Captain Gregor"},
+{name:"Boost",designation:"Unknown",rank:"Trooper",unit:"104th / Wolfpack",era:"Clone Wars",continuity:"Canon",bio:"A member of the Wolfpack who served alongside Wolffe, Sinker and Comet.",aliases:"Boost"},
+{name:"Comet",designation:"Unknown",rank:"Trooper",unit:"104th / Wolfpack",era:"Clone Wars",continuity:"Canon",bio:"A Wolfpack clone known for his role in Plo Koon's campaigns.",aliases:"Comet"},
+{name:"Sinker",designation:"Unknown",rank:"Trooper",unit:"104th / Wolfpack",era:"Clone Wars",continuity:"Canon",bio:"A member of the Wolfpack who fought alongside Plo Koon and Commander Wolffe.",aliases:"Sinker"},
+{name:"Waxer",designation:"Unknown",rank:"Trooper",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Canon",bio:"A 212th clone who served closely with Boil and became known for his compassion toward civilians.",aliases:"Waxer"},
+{name:"Boil",designation:"Unknown",rank:"Trooper",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Canon",bio:"A 212th clone who served with Waxer during campaigns under Obi-Wan Kenobi.",aliases:"Boil"},
+{name:"Wooley",designation:"Unknown",rank:"Trooper",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Canon",bio:"A clone trooper of the 212th Attack Battalion.",aliases:"Wooley"},
+{name:"Numa",designation:"Unknown",rank:"Trooper",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Canon",bio:"A clone associated with the 212th Attack Battalion.",aliases:"Numa"},
+{name:"99",designation:"99",rank:"Maintenance Clone",unit:"Kamino",era:"Clone Wars",continuity:"Canon",bio:"A maintenance clone on Kamino who was treated differently from combat clones but became a valued member of the clone community.",aliases:"Clone 99"},
+{name:"Cut Lawquane",designation:"Unknown",rank:"Trooper / Deserter",unit:"212th-related",era:"Clone Wars",continuity:"Canon",bio:"A clone who left military service and built a family life on Saleucami.",aliases:"Cut"},
+{name:"Howzer",designation:"Unknown",rank:"Captain",unit:"Ryloth forces",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"A clone captain on Ryloth who developed an independent view of the Empire's treatment of the planet.",aliases:"Captain Howzer"},
+{name:"Crys",designation:"Unknown",rank:"Trooper",unit:"Ryloth forces",era:"Clone Wars",continuity:"Canon",bio:"A clone trooper associated with the campaign on Ryloth.",aliases:"Crys"},
+{name:"Rex's Clone Veteran",designation:"Unknown",rank:"Clone Veteran",unit:"Clone veterans",era:"Imperial Era",continuity:"Canon",bio:"A generic entry reserved for named veteran records added as the encyclopedia dataset expands.",aliases:"Veteran clone"},
+{name:"Hunter",designation:"CT-9901",rank:"Clone Sergeant",unit:"Clone Force 99",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"Leader of Clone Force 99, a group of clones with genetic mutations that gave them unusual traits.",aliases:"Clone Force 99 Hunter"},
+{name:"Crosshair",designation:"CT-9904",rank:"Clone Trooper",unit:"Clone Force 99",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"A highly skilled member of Clone Force 99 whose loyalty and choices became central to the team's story.",aliases:"Crosshair"},
+{name:"Wrecker",designation:"CT-9906",rank:"Clone Trooper",unit:"Clone Force 99",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"A physically powerful member of Clone Force 99 with a strong attachment to his squad.",aliases:"Wrecker"},
+{name:"Tech",designation:"CT-9902",rank:"Clone Trooper",unit:"Clone Force 99",era:"Clone Wars / Imperial Era",continuity:"Canon",bio:"The team's technical specialist and a highly analytical member of Clone Force 99.",aliases:"Tech"},
+{name:"Omega",designation:"Unknown",rank:"Clone / Enhanced Clone",unit:"Kamino / Clone Force 99",era:"Imperial Era",continuity:"Canon",bio:"A young clone connected to the origins and future of Clone Force 99.",aliases:"Omega"},
+{name:"Booster",designation:"Unknown",rank:"Trooper",unit:"Clone Force 99",era:"Clone Wars",continuity:"Canon",bio:"A clone name associated with the wider Bad Batch-era clone roster.",aliases:"Booster"},
+{name:"Stak",designation:"Unknown",rank:"Trooper",unit:"91st Reconnaissance",era:"Clone Wars",continuity:"Canon",bio:"A clone trooper associated with the Republic's reconnaissance forces.",aliases:"Stak"},
+{name:"Razor",designation:"Unknown",rank:"Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Canon",bio:"A named clone associated with Republic military operations.",aliases:"Razor"},
+{name:"Thorn",designation:"Unknown",rank:"Commander",unit:"Coruscant Guard",era:"Clone Wars",continuity:"Canon",bio:"A clone commander who served with the Coruscant Guard.",aliases:"Commander Thorn"},
+{name:"Fox",designation:"CC-1010",rank:"Commander",unit:"Coruscant Guard",era:"Clone Wars",continuity:"Canon",bio:"Commander of the Coruscant Guard on Coruscant.",aliases:"Commander Fox"},
+{name:"Thire",designation:"CC-4477",rank:"Commander",unit:"Coruscant Guard",era:"Clone Wars",continuity:"Canon",bio:"A Coruscant Guard commander who served during the Clone Wars.",aliases:"Commander Thire"},
+{name:"Stone",designation:"Unknown",rank:"Commander",unit:"Coruscant Guard",era:"Clone Wars",continuity:"Canon",bio:"A clone commander associated with the Coruscant Guard.",aliases:"Commander Stone"},
+{name:"Bly",designation:"CC-5052",rank:"Marshal Commander",unit:"327th Star Corps",era:"Clone Wars",continuity:"Canon",bio:"A marshal commander who served under Jedi General Aayla Secura.",aliases:"Commander Bly"},
+{name:"Gree",designation:"CC-1004",rank:"Marshal Commander",unit:"41st Elite Corps",era:"Clone Wars",continuity:"Canon",bio:"A senior clone commander associated with the 41st Elite Corps and Jedi Master Yoda.",aliases:"Commander Gree"},
+{name:"Neyo",designation:"CC-8826",rank:"Commander",unit:"91st Mobile Reconnaissance Corps",era:"Clone Wars",continuity:"Canon",bio:"A clone commander who served with the 91st Mobile Reconnaissance Corps.",aliases:"Commander Neyo"},
+{name:"Bacara",designation:"CC-1138",rank:"Marshal Commander",unit:"21st Nova Corps",era:"Clone Wars",continuity:"Canon",bio:"A marshal commander associated with the Galactic Republic's clone forces.",aliases:"Commander Bacara"},
+{name:"Ponds",designation:"CC-6454",rank:"Commander",unit:"Mace Windu's forces",era:"Clone Wars",continuity:"Canon",bio:"A clone commander who served under Jedi Master Mace Windu.",aliases:"Commander Ponds"},
+{name:"Hound",designation:"Unknown",rank:"Commander",unit:"Coruscant Guard",era:"Clone Wars",continuity:"Canon",bio:"A Coruscant Guard clone associated with security operations on the Republic capital.",aliases:"Hound"},
+{name:"Jek",designation:"Unknown",rank:"Trooper",unit:"104th Battalion",era:"Clone Wars",continuity:"Canon",bio:"A Wolfpack-associated clone who served during the Clone Wars.",aliases:"Jek"},
+{name:"Hevy",designation:"CT-782",rank:"ARC Trooper",unit:"Domino Squad",era:"Clone Wars",continuity:"Canon",bio:"A Domino Squad clone whose leadership and sacrifice helped establish the squad's reputation.",aliases:"Hevy"},
+{name:"Droidbait",designation:"CT-00-2010",rank:"Trooper",unit:"Domino Squad",era:"Clone Wars",continuity:"Canon",bio:"A member of the original Domino Squad on Kamino.",aliases:"Droidbait"},
+{name:"Cutup",designation:"CT-4040",rank:"Trooper",unit:"Domino Squad",era:"Clone Wars",continuity:"Canon",bio:"A member of Domino Squad who trained on Kamino.",aliases:"Cutup"},
+{name:"Echo (Domino)",designation:"CT-21-0408",rank:"Trooper / ARC",unit:"Domino Squad / 501st",era:"Clone Wars",continuity:"Canon",bio:"The clone later known as Echo began as a member of Domino Squad before joining the 501st.",aliases:"Echo"},
+{name:"Boba Fett's Alpha",designation:"Alpha-17",rank:"Alpha ARC Trooper",unit:"Advanced Recon Commandos",era:"Clone Wars",continuity:"Legends",bio:"A prominent Alpha-class ARC trooper from the Legends continuity.",aliases:"Alpha-17"},
+{name:"Fordo",designation:"ARC-77",rank:"ARC Captain",unit:"Alpha-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"A famous ARC trooper captain from the 2003 Clone Wars era.",aliases:"ARC-77"},
+{name:"Spar",designation:"Alpha-02",rank:"ARC Trooper",unit:"Alpha-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"An Alpha-class ARC trooper who became important to Mandalorian history in Legends.",aliases:"Spar"},
+{name:"Ordo",designation:"Null-11",rank:"Null ARC Trooper",unit:"Null-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"A Null-class ARC trooper from the Republic Commando era of Legends.",aliases:"Null-11 Ordo"},
+{name:"Mereel",designation:"Null-7",rank:"Null ARC Trooper",unit:"Null-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"A Null-class ARC trooper from the Republic Commando novels.",aliases:"Null-7 Mereel"},
+{name:"Jaing",designation:"Null-10",rank:"Null ARC Trooper",unit:"Null-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"A Null-class ARC trooper from the Republic Commando era.",aliases:"Null-10 Jaing"},
+{name:"Kom'rk",designation:"Null-13",rank:"Null ARC Trooper",unit:"Null-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"A Null-class ARC trooper known for his role in the Republic Commando-era stories.",aliases:"Null-13 Kom'rk"},
+{name:"Prudii",designation:"Null-9",rank:"Null ARC Trooper",unit:"Null-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"A Null-class ARC trooper from the Legends continuity.",aliases:"Null-9 Prudii"},
+{name:"Jango's Null",designation:"Null-class",rank:"Null ARC Trooper",unit:"Null-class ARC Troopers",era:"Clone Wars",continuity:"Legends",bio:"An umbrella reference for the elite Null-class clones in Legends.",aliases:"Null ARC"},
+{name:"Fi",designation:"RC-8015",rank:"Clone Commando",unit:"Omega Squad",era:"Clone Wars",continuity:"Legends",bio:"A Republic Commando from Omega Squad in the Legends novel series.",aliases:"RC-8015"},
+{name:"Darman",designation:"RC-1136",rank:"Clone Commando",unit:"Omega Squad",era:"Clone Wars / Imperial Era",continuity:"Legends",bio:"A Republic Commando and member of Omega Squad in the Legends continuity.",aliases:"RC-1136"},
+{name:"Niner",designation:"RC-1309",rank:"Clone Commando",unit:"Omega Squad",era:"Clone Wars / Imperial Era",continuity:"Legends",bio:"A Republic Commando associated with Omega Squad.",aliases:"RC-1309"},
+{name:"Atin",designation:"RC-3222",rank:"Clone Commando",unit:"Omega Squad",era:"Clone Wars",continuity:"Legends",bio:"A Republic Commando and member of Omega Squad.",aliases:"RC-3222"},
+{name:"Ordo (Commando)",designation:"RC-1140",rank:"Clone Commando",unit:"Omega Squad",era:"Clone Wars",continuity:"Legends",bio:"A Republic Commando appearing in the Legends-era commandos material.",aliases:"RC-1140"},
+{name:"Fi Skirata",designation:"RC-8015",rank:"Clone Commando",unit:"Omega Squad",era:"Clone Wars",continuity:"Legends",bio:"A veteran Republic Commando in the Legends continuity.",aliases:"Fi"},
+{name:"Corr",designation:"RC-5108/8843",rank:"Clone Commando",unit:"Republic Commandos",era:"Clone Wars",continuity:"Legends",bio:"A Republic Commando from the Legends continuity.",aliases:"Corr"},
+{name:"Digger",designation:"Unknown",rank:"Clone Trooper",unit:"Republic Army",era:"Clone Wars",continuity:"Legends",bio:"A named clone appearing in Legends-era material.",aliases:"Digger"},
+{name:"Jai'galaar",designation:"Unknown",rank:"Clone Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Legends",bio:"A named clone associated with the Legends continuity.",aliases:"Jai'galaar"},
+{name:"Deviss",designation:"CC-1119",rank:"Commander",unit:"Clone forces",era:"Clone Wars",continuity:"Legends",bio:"A clone commander whose armor and character history were developed in Legends-era material.",aliases:"Commander Deviss"},
+{name:"Faie",designation:"Unknown",rank:"Commander",unit:"Republic forces",era:"Clone Wars",continuity:"Legends",bio:"A clone commander appearing in Legends-era stories.",aliases:"Commander Faie"},
+{name:"Bly (Legends)",designation:"CC-5052",rank:"Marshal Commander",unit:"327th Star Corps",era:"Clone Wars",continuity:"Legends",bio:"The Legends portrayal of Commander Bly, whose character originated in Legends material before later becoming part of canon.",aliases:"Bly"},
+{name:"Cody (Legends)",designation:"CC-2224",rank:"Marshal Commander",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Legends",bio:"The Legends portrayal of Commander Cody.",aliases:"Cody"},
+{name:"Rex (Legends)",designation:"CT-7567",rank:"Captain",unit:"501st Legion",era:"Clone Wars",continuity:"Legends",bio:"The Legends-era portrayal of Rex; later canonized in The Clone Wars.",aliases:"Rex"},
+{name:"Gree (Legends)",designation:"CC-1004",rank:"Marshal Commander",unit:"41st Elite Corps",era:"Clone Wars",continuity:"Legends",bio:"The Legends portrayal of Commander Gree.",aliases:"Gree"},
+{name:"Bacara (Legends)",designation:"CC-1138",rank:"Marshal Commander",unit:"21st Nova Corps",era:"Clone Wars",continuity:"Legends",bio:"The Legends portrayal of Commander Bacara.",aliases:"Bacara"},
+{name:"Neyo (Legends)",designation:"CC-8826",rank:"Commander",unit:"91st Mobile Reconnaissance Corps",era:"Clone Wars",continuity:"Legends",bio:"The Legends portrayal of Commander Neyo.",aliases:"Neyo"},
+{name:"Odd Ball",designation:"CC-2237",rank:"Clone Pilot",unit:"212th Attack Battalion",era:"Clone Wars",continuity:"Legends",bio:"A named clone pilot from the Republic military.",aliases:"Odd Ball"},
+{name:"Cyborg",designation:"Unknown",rank:"Clone Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Legends",bio:"A named clone appearing in Legends material.",aliases:"Cyborg"},
+{name:"Slick",designation:"Unknown",rank:"Clone Sergeant",unit:"Christophsis forces",era:"Clone Wars",continuity:"Canon",bio:"A clone sergeant whose actions raised questions about loyalty during the Clone Wars.",aliases:"Sergeant Slick"},
+{name:"Denal",designation:"Unknown",rank:"Clone Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A 501st clone who served during the Clone Wars.",aliases:"Denal"},
+{name:"Mixer",designation:"Unknown",rank:"Clone Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A named 501st clone.",aliases:"Mixer"},
+{name:"Redeye",designation:"Unknown",rank:"Clone Trooper",unit:"501st Legion",era:"Clone Wars",continuity:"Canon",bio:"A named clone associated with the 501st roster.",aliases:"Redeye"},
+{name:"Charger",designation:"Unknown",rank:"Clone Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Canon",bio:"A named clone trooper appearing in Clone Wars-era material.",aliases:"Charger"},
+{name:"Trapper",designation:"Unknown",rank:"Clone Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Canon",bio:"A named clone associated with Republic operations.",aliases:"Trapper"},
+{name:"Longshot",designation:"Unknown",rank:"Clone Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Canon",bio:"A named clone associated with Republic operations.",aliases:"Longshot"},
+{name:"Vaughn",designation:"Unknown",rank:"Clone Captain",unit:"332nd Company",era:"Clone Wars",continuity:"Canon",bio:"A clone captain associated with the 332nd Company.",aliases:"Captain Vaughn"},
+{name:"Havoc",designation:"Unknown",rank:"Clone Trooper",unit:"Republic forces",era:"Clone Wars",continuity:"Canon",bio:"A named clone appearing in Republic military material.",aliases:"Havoc"}
+];
+
+
+const verifiedImages = {
+  "Rex":"https://lumiere-a.akamaihd.net/v1/images/captain-rex-main_ba65924c.jpeg?region=0%2C43%2C1353%2C761&width=640",
+  "Cody":"https://lumiere-a.akamaihd.net/v1/images/commander-cody-main_5d0f8d14.jpeg?region=470%2C0%2C1447%2C813&width=640",
+  "Fives":"https://lumiere-a.akamaihd.net/v1/images/databank_arctrooperfives_01_169_53db6e38.jpeg?region=0%2C0%2C1560%2C878&width=640",
+  "Echo":"https://lumiere-a.akamaihd.net/v1/images/echo-main_fd65adde.jpeg?region=0%2C0%2C718%2C404&width=640",
+  "Wolffe":"https://lumiere-a.akamaihd.net/v1/images/wolffe-main_5b463575.jpeg?region=82%2C1%2C960%2C540&width=640",
+  "Bly":"https://lumiere-a.akamaihd.net/v1/images/databank_clonecommanderbly_01_169_7452adc7.jpeg?region=0%2C0%2C1560%2C878&width=640",
+  "Gree":"https://lumiere-a.akamaihd.net/v1/images/databank_clonecommandergree_01_169_ccbc3da4.jpeg?region=0%2C0%2C1560%2C878&width=640",
+  "Hunter":"https://lumiere-a.akamaihd.net/v1/images/hunter-main_310d0ff8.jpeg?region=0%2C0%2C1280%2C720&width=640"
+};
+
+let state={filter:"All",unit:"All",query:"",sort:"name",selected:null};
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function initials(n){return n.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase();}
+function matches(c){
+  const q=state.query.trim().toLowerCase();
+  const filterOK=state.filter==="All"||c.continuity===state.filter;
+  const unitOK=state.unit==="All"||c.unit===state.unit;
+  const text=(c.name+" "+c.designation+" "+c.rank+" "+c.unit+" "+c.era+" "+c.aliases).toLowerCase();
+  return filterOK&&unitOK&&(!q||text.includes(q));
+}
+function filtered(){
+  let a=clones.filter(matches);
+  a.sort((x,y)=>String(x[state.sort]).localeCompare(String(y[state.sort])));
+  return a;
+}
+function render(){
+  const a=filtered(), grid=document.getElementById("grid");
+  grid.innerHTML=a.map((c,i)=>`
+    <article class="card" onclick="selectClone(${clones.indexOf(c)})">
+      <div class="avatar" style="${verifiedImages[c.name]?`background-image:url("${verifiedImages[c.name]}");background-size:cover;background-position:center;color:transparent`:''}">${verifiedImages[c.name]?'':esc(initials(c.name))}<span style="position:absolute;right:7px;top:7px;font-size:11px;color:inherit" class="badge ${c.continuity.toLowerCase()}">${c.continuity}</span></div>
+      <h3>${esc(c.name)}</h3>
+      <div class="meta">${esc(c.designation)} · ${esc(c.rank)}</div>
+      <div class="meta">${esc(c.unit)}</div>
+    </article>`).join("");
+  document.getElementById("resultText").textContent=`${a.length} clone${a.length===1?"":"s"} shown`;
+  document.getElementById("countAll").textContent=clones.length;
+  document.getElementById("countCanon").textContent=clones.filter(c=>c.continuity==="Canon").length;
+  document.getElementById("countLegends").textContent=clones.filter(c=>c.continuity==="Legends").length;
+  document.querySelectorAll("[data-cont]").forEach(b=>b.classList.toggle("active",b.dataset.cont===state.filter));
+  document.querySelectorAll(".toolbar .pill").forEach(b=>b.classList.toggle("active",b.textContent===state.filter));
+  if(document.getElementById("unitSelect")) document.getElementById("unitSelect").value=state.unit;
+}
+function selectClone(i){
+  state.selected=i; const c=clones[i], d=document.getElementById("detail");
+  d.classList.remove("empty");
+  d.innerHTML=`
+    <div class="bigavatar" style="${verifiedImages[c.name]?`background-image:url("${verifiedImages[c.name]}");background-size:cover;background-position:center;color:transparent`:''}">${verifiedImages[c.name]?'':esc(initials(c.name))}</div>
+    <span class="badge ${c.continuity.toLowerCase()}" style="margin-top:12px">${c.continuity}</span>
+    <h2>${esc(c.name)}</h2><div style="color:var(--muted)">${esc(c.aliases)}</div>
+    <p class="bio">${esc(c.bio)}</p>
+    <div class="facts">
+      <div class="fact"><b>Designation</b><span>${esc(c.designation)}</span></div>
+      <div class="fact"><b>Rank / role</b><span>${esc(c.rank)}</span></div>
+      <div class="fact"><b>Unit</b><span>${esc(c.unit)}</span></div>
+      <div class="fact"><b>Era</b><span>${esc(c.era)}</span></div>
+      <div class="fact"><b>Continuity</b><span>${esc(c.continuity)}</span></div>
+    </div>
+    <div class="notice">Image note: Clonepedia only displays an image when its URL has been verified from a StarWars.com Databank image. It will never generate or substitute an invented clone image. If no verified image is available, the entry keeps the text-only placeholder.<br><br>Dataset note: some clone designations are unknown or disputed in published material. This encyclopedia keeps those fields explicitly marked rather than inventing a number.</div>`;
+}
+function setFilter(v){state.filter=v;state.unit="All";document.getElementById("unitSelect").value="All";render();}
+function focusGrid(){document.getElementById("grid").scrollIntoView({behavior:"smooth"});}
+document.getElementById("search").addEventListener("input",e=>{state.query=e.target.value;render();});
+document.getElementById("sort").addEventListener("change",e=>{state.sort=e.target.value;render();});
+document.querySelectorAll("[data-cont]").forEach(b=>b.onclick=()=>{state.filter=b.dataset.cont;state.unit="All";document.getElementById("unitSelect").value="All";render();});
+
+const unitSelect=document.getElementById("unitSelect");
+const allUnits=[...new Set(clones.map(c=>c.unit))].sort((a,b)=>a.localeCompare(b));
+allUnits.forEach(unit=>{
+  const opt=document.createElement("option");
+  opt.value=unit; opt.textContent=unit;
+  unitSelect.appendChild(opt);
+});
+unitSelect.addEventListener("change",e=>{
+  state.unit=e.target.value;
+  state.filter="All";
+  document.querySelectorAll("[data-cont]").forEach(b=>b.classList.toggle("active",b.dataset.cont==="All"));
+  document.querySelectorAll(".toolbar .pill").forEach(b=>b.classList.toggle("active",b.textContent==="All"));
+  render();
+});
+render();
+</script>
+</body>
+</html>
